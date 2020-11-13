@@ -1,0 +1,14 @@
+<h2>{{title}}</h2>
+<ul>
+    <li *ngFor="let user of users" (click)="selectUser(user)">
+        {{user.id}}, {{user.name}}, {{user.email}}
+    </li>
+</ul>
+<p *ngIf="selectedUser">Vybratý používateľ: {{selectedUser.name}}</p>
+<table mat-table [dataSource]="users">
+    <mat-text-column name="name" headerText="Meno"></mat-text-column>
+    <mat-text-column name="email" headerText="E-mail"></mat-text-column>
+
+    <tr mat-header-row *matHeaderRowDef="['name', 'email']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['name', 'email']"></tr>
+</table>
