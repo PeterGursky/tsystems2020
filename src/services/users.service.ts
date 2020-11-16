@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, of, throwError } from 'rxjs';
+import { EMPTY, Observable, of, Subscriber, throwError } from 'rxjs';
 import { User } from 'src/entities/user';
 import { catchError, map } from 'rxjs/operators';
 import { Auth } from 'src/entities/auth';
@@ -15,7 +15,30 @@ export class UsersService {
             new User('JozefService', 'jozef@anna.sk'), 
             new User('MilanService', 'milan@gmail.com', 3)];
   private serverUrl = "http://localhost:8080/";
-  private token:string;
+//  private token:string;
+  private loggedUserSubscriber: Subscriber<string>;
+  private get token(): string {
+    return localStorage.getItem('token');
+  }
+
+  private set token(t: string) {
+    if (t)
+      localStorage.setItem('token', t);
+    else
+      localStorage.removeItem('token');  
+  }
+
+  private get user(): string {
+    return localStorage.getItem('user');
+  }
+
+  private set user(u: string) {
+    this.loggedUserSubscriber.next(u);
+    if (u)
+      localStorage.setItem('user', u);
+    else
+      localStorage.removeItem('user');  
+  }
 
   constructor(private http: HttpClient, private snackbarService: SnackbarService) { }
 
@@ -24,6 +47,7 @@ export class UsersService {
     .pipe(
       map(token => {
         this.token = token;
+        this.user = auth.name;
         this.snackbarService.successMessage("úspešné prihlásenie používateľa " + auth.name);
         return true;
       }),
@@ -31,6 +55,23 @@ export class UsersService {
     );
   }
   
+  logout() {
+    if (this.token) {
+      this.http.get(this.serverUrl + 'logout/' + this.token).pipe(
+        catchError(error => this.processHttpError(error))
+      ).subscribe();
+      this.token = null;
+      this.user = null;
+    }
+  }
+
+  loggedUser(): Observable<string> {
+    return new Observable(subscriber => {
+      this.loggedUserSubscriber = subscriber;
+      subscriber.next(this.user);
+    });
+  }
+
   getUsersLocalSynchronne() : User[] {
     return this.users;
   }
@@ -41,6 +82,13 @@ export class UsersService {
 
   getUsers() : Observable<User[]> {
     return this.http.get(this.serverUrl + "users").pipe(
+      map(jsonusers => this.mapToRealUsers(jsonusers)),
+      catchError(error => this.processHttpError(error)
+    ));
+  }
+
+  getExtendedUsers() : Observable<User[]> {
+    return this.http.get(this.serverUrl + "users/" + this.token).pipe(
       map(jsonusers => this.mapToRealUsers(jsonusers)),
       catchError(error => this.processHttpError(error)
     ));

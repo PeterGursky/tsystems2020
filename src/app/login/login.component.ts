@@ -10,7 +10,7 @@ import { UsersService } from 'src/services/users.service';
 })
 export class LoginComponent implements OnInit {
 
-  auth: Auth = new Auth('login','heslo');
+  auth: Auth = new Auth('Peter','upjs');
   hidePassword = true;
   
   constructor(private usersService: UsersService, private router: Router) { }
@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
       success => {
         if (success) {
           console.log('token received:', success);
-          this.router.navigateByUrl("/users");
+          this.router.navigateByUrl("/extended-users");
         }
       }
     );

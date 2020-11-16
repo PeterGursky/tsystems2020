@@ -12,6 +12,7 @@ import { C404Component } from './c404/c404.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
 import { NavbarComponent } from './navbar/navbar.component';
+import { ExtendedUsersComponent } from './extended-users/extended-users.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     UsersComponent,
     LoginComponent,
     C404Component,
-    NavbarComponent
+    NavbarComponent,
+    ExtendedUsersComponent
   ],
   imports: [
     BrowserModule,
