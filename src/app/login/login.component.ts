@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Auth } from 'src/entities/auth';
+import { UsersService } from 'src/services/users.service';
 
 @Component({
   selector: 'app-login',
@@ -7,11 +10,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
+  auth: Auth = new Auth('login','heslo');
   hidePassword = true;
   
-  constructor() { }
+  constructor(private usersService: UsersService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
+  submitForm() {
+    this.usersService.login(this.auth).subscribe(
+      success => {
+        if (success) {
+          console.log('token received:', success);
+          this.router.navigateByUrl("/users");
+        }
+      }
+    );
+  }
+
+  get printAuth() {
+    return JSON.stringify(this.auth);
+  }
 }

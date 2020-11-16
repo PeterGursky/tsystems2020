@@ -1,24 +1,34 @@
+<form (ngSubmit)="submitForm()">
 <mat-card class="example-card">
     <mat-card-header>
       <mat-card-title>Prihlásenie</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <form>
+        <p>Auth: {{printAuth}}</p>
+
             <mat-form-field appearance="fill">
                 <mat-label>Login</mat-label>
-                <input matInput>
+                <input 
+                  matInput 
+                  [(ngModel)]="auth.name"
+                  name="name">
               </mat-form-field>
               <mat-form-field appearance="fill">
                 <mat-label>Enter your password</mat-label>
-                <input matInput [type]="hidePassword ? 'password' : 'text'">
+                <input 
+                  value="{{auth.password}}" 
+                  matInput 
+                  [type]="hidePassword ? 'password' : 'text'"
+                  [(ngModel)]="auth.password"
+                  name="pass">
                 <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" 
                  [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
                 <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
               </mat-form-field>
-        </form>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary">Prihlásiť</button>
+      <button type="submit" mat-raised-button color="primary">Prihlásiť</button>
     </mat-card-actions>
   </mat-card>
+</form>
