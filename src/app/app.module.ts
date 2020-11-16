@@ -11,13 +11,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { C404Component } from './c404/c404.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UsersComponent,
     LoginComponent,
-    C404Component
+    C404Component,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
