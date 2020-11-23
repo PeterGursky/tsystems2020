@@ -1,0 +1,42 @@
+<form (ngSubmit)="submitForm()" [formGroup]="registerForm">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Registrácia</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="fill">
+        <mat-label>Login</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-error>{{printError(name.errors)}}</mat-error>
+        <mat-hint>Napíšte používateľské meno</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>E-mail</mat-label>
+        <input matInput formControlName="email" required>
+        <mat-error>{{printError(email.errors)}}</mat-error>
+        <mat-hint>Napíšte váš e-mail</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Napíšte heslo</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+        <mat-error>{{printError(password.errors)}}</mat-error>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Napíšte heslo ešte raz</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password2" required>
+        <mat-error>chyba</mat-error>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button type="submit" mat-raised-button color="primary" [disabled]="registerForm.invalid">Registrovať</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
