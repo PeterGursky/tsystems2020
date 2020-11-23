@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { Auth } from 'src/entities/auth';
 import { UsersService } from 'src/services/users.service';
@@ -27,6 +28,17 @@ export class LoginComponent implements OnInit {
         }
       }
     );
+  }
+  printError(value:any) {
+    if (value) {
+      if (value.required) {
+        return "Vyžadovaná hodnota";
+      }
+      if (value.minlength) {
+        return "Minimálna dĺžka je " + value.minlength.requiredLength + " a aktuálna je " 
+              + value.minlength.actualLength;
+      }
+    }
   }
 
   get printAuth() {
