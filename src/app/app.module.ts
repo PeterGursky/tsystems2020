@@ -18,6 +18,8 @@ import { RegisterComponent } from './register/register.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { UserEditChildComponent } from './user-edit-child/user-edit-child.component';
+import { UserAddComponent } from './user-add/user-add.component';
+import { GroupsModule } from 'src/modules/groups/groups.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { UserEditChildComponent } from './user-edit-child/user-edit-child.compon
     RegisterComponent,
     ConfirmDialogComponent,
     UserEditComponent,
-    UserEditChildComponent
+    UserEditChildComponent,
+    UserAddComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +43,7 @@ import { UserEditChildComponent } from './user-edit-child/user-edit-child.compon
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    GroupsModule,
     AppRoutingModule
   ],
   providers: [],

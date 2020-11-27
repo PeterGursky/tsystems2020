@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, switchMap } from 'rxjs/operators';
 import { User } from 'src/entities/user';
+import { SnackbarService } from 'src/services/snackbar.service';
 import { UsersService } from 'src/services/users.service';
 
 @Component({
@@ -15,7 +16,9 @@ export class UserEditComponent implements OnInit {
   username: string;
   user: User;
 
-  constructor(private route: ActivatedRoute, private usersService: UsersService) { }
+  constructor(private route: ActivatedRoute, 
+              private usersService: UsersService,
+              private snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
 //    this.userId = this.route.snapshot.params["id"];
@@ -28,4 +31,9 @@ export class UserEditComponent implements OnInit {
       });
   }
 
+  changeUser(user: User) {
+    this.usersService.saveUser(user).subscribe(user => {
+      this.snackbarService.successMessage("Používateľ " + user.name +" uložený");
+    });
+  }
 }

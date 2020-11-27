@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { AsyncValidatorFn, FormArray, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,9 @@ import { UsersService } from 'src/services/users.service';
 })
 export class UserEditChildComponent implements OnInit, OnChanges {
 
-  @Input() user: User;
+  @Input() user: User = new User("","");
+  @Output() change = new EventEmitter<User>();
+
   allGroups: Group[];
 
   userEditForm = new FormGroup({
@@ -31,10 +33,14 @@ export class UserEditChildComponent implements OnInit, OnChanges {
   constructor(private usersService: UsersService) { }
 
   ngOnInit(): void {
-
+    this.loadUserData();
   }
 
   ngOnChanges(): void {
+    this.loadUserData();
+  }
+
+  loadUserData() {
     if (this.user) {
       this.name.setValue(this.user.name);
       this.email.setValue(this.user.email);
@@ -98,5 +104,18 @@ export class UserEditChildComponent implements OnInit, OnChanges {
       }
       return JSON.stringify(value);
     }
+  }
+
+  submitForm() {
+    const user = new User(
+      this.name.value, 
+      this.email.value, 
+      this.user.id,
+      undefined, //lastLogin
+      this.password.value.trim() ? this.password.value.trim() : null,
+      this.active.value,
+      this.allGroups.filter((group, i) => this.groups.at(i).value)
+      );
+    this.change.emit(user);
   }
 }
