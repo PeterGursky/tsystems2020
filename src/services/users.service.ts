@@ -6,6 +6,7 @@ import { catchError, map, mapTo } from 'rxjs/operators';
 import { Auth } from 'src/entities/auth';
 import { SnackbarService } from './snackbar.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Group } from 'src/entities/group';
 
 @Injectable({
   providedIn: 'root'
@@ -118,6 +119,12 @@ export class UsersService {
       mapTo(true),
       catchError(error => this.processHttpError(error))
     )
+  }
+
+  getGroups() : Observable<Group[]> {
+    return this.http.get<Group[]>(this.serverUrl + "groups").pipe(
+      catchError(error => this.processHttpError(error)
+    ));
   }
 
   private processHttpError(error) {
