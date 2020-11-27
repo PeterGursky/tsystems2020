@@ -20,6 +20,7 @@
         <mat-label>Napíšte heslo</mat-label>
         <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
         <mat-error>{{printError(password.errors)}}</mat-error>
+        <mat-hint>{{passwordMessage}}</mat-hint>
         <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hidePassword">
           <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -28,7 +29,7 @@
       <mat-form-field appearance="fill">
         <mat-label>Napíšte heslo ešte raz</mat-label>
         <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password2" required>
-        <mat-error>chyba</mat-error>
+        <mat-error *ngIf="password2?.errors?.differentPasswords">{{password2.errors.differentPasswords}}</mat-error>
         <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hidePassword">
           <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>

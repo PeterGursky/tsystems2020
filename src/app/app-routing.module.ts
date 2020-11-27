@@ -4,10 +4,12 @@ import { C404Component } from './c404/c404.component';
 import { ExtendedUsersComponent } from './extended-users/extended-users.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
 import { UsersComponent } from './users/users.component';
 
 const routes:Routes = [
   { path: 'users', component: UsersComponent },
+  { path: 'users/edit/:id', component: UserEditComponent },
   { path: 'extended-users', component: ExtendedUsersComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },

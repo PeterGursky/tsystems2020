@@ -15,6 +15,9 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ExtendedUsersComponent } from './extended-users/extended-users.component';
 import { GroupsToStringPipe } from '../pipes/groups-to-string.pipe';
 import { RegisterComponent } from './register/register.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { UserEditChildComponent } from './user-edit-child/user-edit-child.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { RegisterComponent } from './register/register.component';
     NavbarComponent,
     ExtendedUsersComponent,
     GroupsToStringPipe,
-    RegisterComponent
+    RegisterComponent,
+    ConfirmDialogComponent,
+    UserEditComponent,
+    UserEditChildComponent
   ],
   imports: [
     BrowserModule,
@@ -37,6 +43,7 @@ import { RegisterComponent } from './register/register.component';
     AppRoutingModule
   ],
   providers: [],
+  entryComponents: [ConfirmDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

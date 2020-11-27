@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, of, Subscriber, throwError } from 'rxjs';
 import { User } from 'src/entities/user';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, mapTo } from 'rxjs/operators';
 import { Auth } from 'src/entities/auth';
 import { SnackbarService } from './snackbar.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -55,6 +55,18 @@ export class UsersService {
     );
   }
   
+  userConflicts(user: User): Observable<string[]> {
+    return this.http.post<string[]>(this.serverUrl + "user-conflicts", user).pipe(
+      catchError(error => this.processHttpError(error))
+    )
+  }
+
+  register(user: User): Observable<User> {
+    return this.http.post<User>(this.serverUrl + "register", user).pipe(
+      catchError(error => this.processHttpError(error))
+    )
+  }
+
   logout() {
     if (this.token) {
       this.http.get(this.serverUrl + 'logout/' + this.token).pipe(
@@ -92,6 +104,20 @@ export class UsersService {
       map(jsonusers => this.mapToRealUsers(jsonusers)),
       catchError(error => this.processHttpError(error)
     ));
+  }
+
+  getUser(id:number) : Observable<User> {
+    return this.http.get<User>(this.serverUrl + "user/" +id+ "/"+ this.token).pipe(
+      map(u => User.clone(u)),
+      catchError(error => this.processHttpError(error)
+    ));
+  }
+
+  deleteUser(userId: number): Observable<boolean> {
+    return this.http.delete(this.serverUrl + "user/" +userId + "/" + this.token).pipe(
+      mapTo(true),
+      catchError(error => this.processHttpError(error))
+    )
   }
 
   private processHttpError(error) {
