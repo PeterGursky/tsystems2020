@@ -1,25 +1,20 @@
 <mat-toolbar color="primary">
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
+        <mat-icon>menu</mat-icon>
     </button>
-    <span><a 
-        mat-flat-button 
-        color="primary" 
-        routerLink="/users" 
-        routerLinkActive="mat-accent">
+    <span><a mat-flat-button color="primary" routerLink="/users" routerLinkActive="mat-accent">
             Používatelia</a></span>
-    <span *ngIf="username"><a 
-        mat-flat-button 
-        color="primary" 
-        routerLink="/extended-users" 
-        routerLinkActive="mat-accent">
+    <span *ngIf="username"><a mat-flat-button color="primary" routerLink="/extended-users"
+            routerLinkActive="mat-accent">
             Rozšírení používatelia</a></span>
+    <span><a mat-flat-button color="primary" routerLink="/groups" routerLinkActive="mat-accent">
+            Skupiny</a></span>
     <span class="example-spacer"></span>
-    
+
     <span *ngIf="username; else elseBlock">
-        {{username}} 
+        {{username}}
         <button type="button" mat-flat-button color="primary" (click)="logout()">
-            <mat-icon>logout</mat-icon> Logout 
+            <mat-icon>logout</mat-icon> Logout
         </button>
     </span>
     <ng-template #elseBlock>
@@ -28,6 +23,6 @@
         </a>
         <a mat-flat-button color="primary" routerLink="/register" routerLinkActive="mat-accent">
             <mat-icon>account_box</mat-icon> Register
-        </a>        
+        </a>
     </ng-template>
 </mat-toolbar>

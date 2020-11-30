@@ -20,6 +20,10 @@ import { UserEditComponent } from './user-edit/user-edit.component';
 import { UserEditChildComponent } from './user-edit-child/user-edit-child.component';
 import { UserAddComponent } from './user-add/user-add.component';
 import { GroupsModule } from 'src/modules/groups/groups.module';
+import { NgxsModule } from '@ngxs/store';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -37,13 +41,21 @@ import { GroupsModule } from 'src/modules/groups/groups.module';
     UserAddComponent
   ],
   imports: [
+    NgxsModule.forRoot([], {
+      developmentMode: !environment.production,
+      selectorOptions: {
+        suppressErrors: false,
+        injectContainerState: false
+      }
+    }),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot(),
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    GroupsModule,
     AppRoutingModule
   ],
   providers: [],

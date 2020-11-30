@@ -18,11 +18,11 @@ export class UsersService {
   private serverUrl = "http://localhost:8080/";
 //  private token:string;
   private loggedUserSubscriber: Subscriber<string>;
-  private get token(): string {
+  public get token(): string {
     return localStorage.getItem('token');
   }
 
-  private set token(t: string) {
+  public set token(t: string) {
     if (t)
       localStorage.setItem('token', t);
     else
