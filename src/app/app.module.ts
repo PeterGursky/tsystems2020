@@ -25,6 +25,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { environment } from 'src/environments/environment';
 import { AuthState } from 'src/shared/auth.state';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,9 @@ import { AuthState } from 'src/shared/auth.state';
         suppressErrors: false,
         injectContainerState: false
       }
+    }),
+    NgxsStoragePluginModule.forRoot({
+      key: ["auth.username", "auth.token"]
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),

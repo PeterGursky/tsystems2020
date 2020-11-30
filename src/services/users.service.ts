@@ -2,11 +2,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, of, Subscriber, throwError } from 'rxjs';
 import { User } from 'src/entities/user';
-import { catchError, map, mapTo } from 'rxjs/operators';
+import { catchError, map, mapTo, tap } from 'rxjs/operators';
 import { Auth } from 'src/entities/auth';
 import { SnackbarService } from './snackbar.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Group } from 'src/entities/group';
+import { Store } from '@ngxs/store';
+import { AuthState } from 'src/shared/auth.state';
+import { OldTokenLogout } from 'src/shared/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -17,40 +19,48 @@ export class UsersService {
             new User('MilanService', 'milan@gmail.com', 3)];
   private serverUrl = "http://localhost:8080/";
 //  private token:string;
-  private loggedUserSubscriber: Subscriber<string>;
-  public get token(): string {
-    return localStorage.getItem('token');
+//  private loggedUserSubscriber: Subscriber<string>;
+//   public get token(): string {
+//     return localStorage.getItem('token');
+//   }
+
+//   public set token(t: string) {
+//     if (t)
+//       localStorage.setItem('token', t);
+//     else
+//       localStorage.removeItem('token');  
+//   }
+
+//   private get user(): string {
+//     return localStorage.getItem('user');
+//   }
+
+//   private set user(u: string) {
+// //    this.loggedUserSubscriber.next(u);
+//     if (u)
+//       localStorage.setItem('user', u);
+//     else
+//       localStorage.removeItem('user');  
+//   }
+
+
+  constructor(private http: HttpClient, private snackbarService: SnackbarService, private store: Store) { }
+
+  get user() {
+    return this.store.selectSnapshot(AuthState.username);
   }
 
-  public set token(t: string) {
-    if (t)
-      localStorage.setItem('token', t);
-    else
-      localStorage.removeItem('token');  
+  get token() {
+    return this.store.selectSnapshot(state => state.auth.token);
   }
 
-  private get user(): string {
-    return localStorage.getItem('user');
-  }
-
-  private set user(u: string) {
-    this.loggedUserSubscriber.next(u);
-    if (u)
-      localStorage.setItem('user', u);
-    else
-      localStorage.removeItem('user');  
-  }
-
-  constructor(private http: HttpClient, private snackbarService: SnackbarService) { }
-
-  login(auth:Auth):Observable<boolean> {
+  login(auth:Auth):Observable<string> {
     return this.http.post(this.serverUrl + 'login', auth, {responseType:"text"})
     .pipe(
-      map(token => {
-        this.token = token;
-        this.user = auth.name;
+      tap(token => {
+        // this.token = token;
+        // this.user = auth.name;
         this.snackbarService.successMessage("úspešné prihlásenie používateľa " + auth.name);
-        return true;
       }),
       catchError(error => this.processHttpError(error))
     );
@@ -68,19 +78,26 @@ export class UsersService {
     )
   }
 
-  logout() {
-    if (this.token) {
-      this.http.get(this.serverUrl + 'logout/' + this.token).pipe(
+  logout(token: string): Observable<void> {
+      return this.http.get(this.serverUrl + 'logout/' + token).pipe(
+        mapTo(undefined),
         catchError(error => this.processHttpError(error))
-      ).subscribe();
-      this.token = null;
-      this.user = null;
+      )
+  }
+
+  checkToken(): Observable<void> {
+    if (this.token == null) {
+      return of(undefined);
     }
+    return this.http.get(this.serverUrl+ "check-token/" + this.token).pipe(
+      mapTo(undefined),
+      catchError(error => this.processHttpError(error))
+    )
   }
 
   loggedUser(): Observable<string> {
     return new Observable(subscriber => {
-      this.loggedUserSubscriber = subscriber;
+//      this.loggedUserSubscriber = subscriber;
       subscriber.next(this.user);
     });
   }
@@ -144,6 +161,11 @@ export class UsersService {
 //        const message = error.error.errorMessage ? error.error.errorMessage : JSON.parse(error.error).errorMessage;
 //        const message = error.error.errorMessage ?? JSON.parse(error.error).errorMessage; // undefined, false, null
         const message = error.error.errorMessage || JSON.parse(error.error).errorMessage; // undefined, false, null, NaN, "", 0
+        if (error.status === 401) {
+          this.store.dispatch(new OldTokenLogout())
+          this.snackbarService.errorMessage("Sedenie vypršalo");
+          return EMPTY;
+        }
         this.snackbarService.errorMessage(message);
         return EMPTY;
       }

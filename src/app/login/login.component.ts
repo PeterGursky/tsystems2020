@@ -5,6 +5,7 @@ import { Store } from '@ngxs/store';
 import { Auth } from 'src/entities/auth';
 import { UsersService } from 'src/services/users.service';
 import { Login } from 'src/shared/auth.actions';
+import { AuthState } from 'src/shared/auth.state';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,14 @@ export class LoginComponent implements OnInit {
   }
 
   submitForm() {
-    this.store.dispatch(new Login(this.auth));
+    this.store.dispatch(new Login(this.auth)).subscribe(
+      () => {
+        console.log("Udalosť prihlásenia skončila");
+        this.router.navigateByUrl(
+          this.store.selectSnapshot(AuthState.redirectUrl)
+        );
+      }
+    );
     // this.usersService.login(this.auth).subscribe(
     //   success => {
     //     if (success) {
