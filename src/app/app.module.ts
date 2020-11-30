@@ -24,6 +24,7 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { environment } from 'src/environments/environment';
+import { AuthState } from 'src/shared/auth.state';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,7 @@ import { environment } from 'src/environments/environment';
     UserAddComponent
   ],
   imports: [
-    NgxsModule.forRoot([], {
+    NgxsModule.forRoot([AuthState], {
       developmentMode: !environment.production,
       selectorOptions: {
         suppressErrors: false,
